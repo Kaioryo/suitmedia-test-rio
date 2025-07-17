@@ -1,24 +1,16 @@
 {
   "name": "suitmedia-test-rio",
   "version": "1.0.0",
+  "type": "module",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Kaioryo/suitmedia-test-rio.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Kaioryo/suitmedia-test-rio/issues"
-  },
-  "homepage": "https://github.com/Kaioryo/suitmedia-test-rio#readme",
-  "description": "",
   "dependencies": {
-    "axios": "^1.10.0",
-    "express": "^5.1.0"
+    "axios": "^1.10.0"
   }
 }
