@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideas - Suitmedia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ff6b35;
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.hidden {
+            transform: translateY(-100%);
+        }
+
+        .header.transparent {
+            background: rgba(255, 107, 53, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Banner Styles */
+        .banner {
+            position: relative;
+            height: 60vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            will-change: transform;
+        }
+
+        .banner-title {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .banner-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: white;
+            clip-path: polygon(0 100%, 100% 100%, 100% 0);
+            z-index: 3;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem 2rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .items-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-group label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .control-group select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* Post Grid */
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: block;
+        }
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-date {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 4.2em;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            color: #666;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: #f0f0f0;
+        }
+
+        .pagination button.active {
+            background: #ff6b35;
+            color: white;
+            border-color: #ff6b35;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff6b35;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .nav {
+                gap: 1rem;
+            }
+
+            .banner-title {
+                font-size: 2.5rem;
+            }
+
+            .banner-subtitle {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                justify-content: space-between;
+            }
+
+            .post-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">Suitmedia</a>
+            <nav class="nav">
+                <a href="#">Work</a>
+                <a href="#">About</a>
+                <a href="#">Services</a>
+                <a href="#" class="active">Ideas</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="banner">
+        <div class="banner-bg" id="bannerBg"></div>
+        <div class="banner-overlay"></div>
+        <div class="banner-content" id="bannerContent">
+            <h1 class="banner-title">Ideas</h1>
+            <p class="banner-subtitle">Where all our great things begin</p>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="controls">
+            <div class="items-info" id="itemsInfo">Loading...</div>
+            <div class="control-group">
+                <label for="showPerPage">Show per page:</label>
+                <select id="showPerPage">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="sortBy">Sort by:</label>
+                <select id="sortBy">
+                    <option value="-published_at">Newest</option>
+                    <option value="published_at">Oldest</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="postGrid" class="post-grid">
+            <div class="loading">Loading ideas...</div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <script>
+        class IdeasPage {
+            constructor() {
+                this.currentPage = 1;
+                this.pageSize = 10;
+                this.sortBy = '-published_at';
+                this.totalItems = 0;
+                this.totalPages = 0;
+                this.posts = [];
+                this.isLoading = false;
+                this.lastScrollTop = 0;
+
+                this.initializeFromURL();
+                this.setupEventListeners();
+                this.setupHeaderScroll();
+                this.setupParallax();
+                this.loadPosts();
+            }
+
+            initializeFromURL() {
+                const params = new URLSearchParams(window.location.search);
+                this.currentPage = parseInt(params.get('page')) || 1;
+                this.pageSize = parseInt(params.get('size')) || 10;
+                this.sortBy = params.get('sort') || '-published_at';
+
+                document.getElementById('showPerPage').value = this.pageSize;
+                document.getElementById('sortBy').value = this.sortBy;
+            }
+
+            updateURL() {
+                const params = new URLSearchParams();
+                params.set('page', this.currentPage);
+                params.set('size', this.pageSize);
+                params.set('sort', this.sortBy);
+                const newURL = `${window.location.pathname}?${params.toString()}`;
+                window.history.replaceState({}, '', newURL);
+            }
+
+            setupEventListeners() {
+                document.getElementById('showPerPage').addEventListener('change', (e) => {
+                    this.pageSize = parseInt(e.target.value);
+                    this.currentPage = 1;
+                    this.updateURL();
+                    this.loadPosts();
+                });
+
+                document.getElementById('sortBy').addEventListener('change', (e) => {
+                    this.sortBy = e.target.value;
+                    this.currentPage = 1;
+                    this.updateURL();
+                    this.loadPosts();
+                });
+            }
+
+            setupHeaderScroll() {
+                const header = document.querySelector('.header');
+                let ticking = false;
+
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                            if (currentScrollTop > this.lastScrollTop && currentScrollTop > 100) {
+                                header.classList.add('hidden');
+                            } else {
+                                header.classList.remove('hidden');
+                            }
+
+                            if (currentScrollTop > 50) {
+                                header.classList.add('transparent');
+                            } else {
+                                header.classList.remove('transparent');
+                            }
+
+                            this.lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                });
+            }
+
+            setupParallax() {
+                const bannerBg = document.getElementById('bannerBg');
+                const bannerContent = document.getElementById('bannerContent');
+                let ticking = false;
+
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            const scrollTop = window.pageYOffset;
+                            bannerBg.style.transform = `translateY(${scrollTop * -0.5}px)`;
+                            bannerContent.style.transform = `translateY(${scrollTop * 0.3}px)`;
+                            bannerContent.style.opacity = Math.max(0, 1 - scrollTop / 300);
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                });
+            }
+
+            async loadPosts() {
+                if (this.isLoading) return;
+
+                this.isLoading = true;
+                const postGrid = document.getElementById('postGrid');
+                postGrid.innerHTML = '<div class="loading">Loading ideas...</div>';
+
+                try {
+                    const response = await fetch(
+                        `/proxy/ideas?page[number]=${this.currentPage}&page[size]=${this.pageSize}&append[]=small_image&append[]=medium_image&sort=${this.sortBy}`,
+                        { headers: { Accept: 'application/json' } }
+                    );
+
+                    if (!response.ok) throw new Error('Network response was not ok');
+
+                    const data = await response.json();
+                    this.posts = data.data;
+                    this.totalItems = data.meta.total;
+                    this.totalPages = data.meta.last_page;
+
+                    if (this.posts.length > 0) {
+                        let bannerImage = null;
+
+                        if (Array.isArray(this.posts[0].medium_image)) {
+                            bannerImage = this.posts[0].medium_image[0]?.url;
+                        }
+
+                        if (!bannerImage && Array.isArray(this.posts[0].small_image)) {
+                            bannerImage = this.posts[0].small_image[0]?.url;
+                        }
+
+                        if (bannerImage) {
+                            const bannerBg = document.getElementById('bannerBg');
+                            bannerBg.style.backgroundImage = `url('${bannerImage}')`;
+                            bannerBg.style.backgroundSize = 'cover';
+                            bannerBg.style.backgroundPosition = 'center';
+                            bannerBg.style.backgroundRepeat = 'no-repeat';
+
+                            console.log("Banner image set to:", bannerImage);
+                        }
+                    }
+
+                    this.renderPosts();
+                    this.renderPagination();
+                    this.updateItemsInfo();
+                } catch (error) {
+                    console.error('Error loading posts:', error);
+                    postGrid.innerHTML = '<div class="loading">Error loading ideas. Please try again.</div>';
+                } finally {
+                    this.isLoading = false;
+                }
+            }
+
+
+            renderPosts() {
+                const postGrid = document.getElementById('postGrid');
+
+                if (this.posts.length === 0) {
+                    postGrid.innerHTML = '<div class="loading">No ideas found.</div>';
+                    return;
+                }
+
+                postGrid.innerHTML = this.posts.map(post => {
+                    let imageUrl = 'https://placehold.co/300x200?text=No+Image';
+
+                    const small = Array.isArray(post.small_image) ? post.small_image[0]?.url : null;
+                    const medium = Array.isArray(post.medium_image) ? post.medium_image[0]?.url : null;
+                    const finalImage = small || medium;
+
+                    if (finalImage) {
+                        imageUrl = finalImage.startsWith('http')
+                            ? finalImage
+                            : 'https://suitmedia-backend.suitdev.com' + finalImage;
+                    }
+                    console.log('Final image URL:', imageUrl);
+
+                    return `
+            <article class="post-card">
+                <img 
+                src="${imageUrl}" 
+                alt="${post.title}"
+                class="post-image"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=No+Image'"
+                />
+                <div class="post-content">
+                <time class="post-date">${this.formatDate(post.published_at)}</time>
+                <h3 class="post-title">${post.title}</h3>
+                </div>
+            </article>
+            `;
+                }).join('');
+            }
+
+
+            renderPagination() {
+                const pagination = document.getElementById('pagination');
+                if (this.totalPages <= 1) return pagination.innerHTML = '';
+
+                let html = '';
+                html += `<button ${this.currentPage === 1 ? 'disabled' : ''} onclick="ideasPage.goToPage(${this.currentPage - 1})">&#8249;</button>`;
+                const start = Math.max(1, this.currentPage - 2);
+                const end = Math.min(this.totalPages, this.currentPage + 2);
+                if (start > 1) html += `<button onclick="ideasPage.goToPage(1)">1</button><span>...</span>`;
+                for (let i = start; i <= end; i++) {
+                    html += `<button class="${i === this.currentPage ? 'active' : ''}" onclick="ideasPage.goToPage(${i})">${i}</button>`;
+                }
+                if (end < this.totalPages) html += `<span>...</span><button onclick="ideasPage.goToPage(${this.totalPages})">${this.totalPages}</button>`;
+                html += `<button ${this.currentPage === this.totalPages ? 'disabled' : ''} onclick="ideasPage.goToPage(${this.currentPage + 1})">&#8250;</button>`;
+                pagination.innerHTML = html;
+            }
+
+            updateItemsInfo() {
+                const start = (this.currentPage - 1) * this.pageSize + 1;
+                const end = Math.min(this.currentPage * this.pageSize, this.totalItems);
+                document.getElementById('itemsInfo').textContent = `Showing ${start} - ${end} of ${this.totalItems}`;
+            }
+
+            goToPage(page) {
+                if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+                this.currentPage = page;
+                this.updateURL();
+                this.loadPosts();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            formatDate(dateStr) {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+        }
+
+        const ideasPage = new IdeasPage();
+    </script>
+</body>
+
+</html>
